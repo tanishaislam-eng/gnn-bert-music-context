@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# macOS
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Raw/downloaded datasets
+data/raw/
+*.mp3
+*.wav
+*.flac
+*.ogg
+*.m4a
+
+# Large generated/cache files
+*.cache
+*.tmp
+
+# Model checkpoints
+*.pt
+*.pth
+*.ckpt
+checkpoints/
+
+# Keep representative graph examples if explicitly added
+!data/examples/
+!data/examples/**/*.pt
+!data/examples/**/*.json
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Processed dataset files are kept locally
+data/processed/
+data/splits/
+
+# Keep GitHub submission examples
+!data/examples/
+!data/examples/*.json

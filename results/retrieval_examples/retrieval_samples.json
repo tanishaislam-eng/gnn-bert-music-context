@@ -1,0 +1,212 @@
+[
+  {
+    "query_id": 1,
+    "query_caption": "This song contains digital drums playing along with a synth bass line creating the foundation of this song. Some drum elements are panned to both sides of the speakers. A synth lead sound is playing a high pitched melody and a male voice sample is used as a loop to create a melody. This song may be playing for a youtube video.",
+    "top_3_retrieved_clips": [
+      {
+        "track_id": "mc_071",
+        "caption": "This is an instrumental sitar music piece. The sitar is being played at a medium-to-high range. There is a calming and relaxing atmosphere to this piece. This piece can be used in the background of a meditation video. It could also be played during a meditation session at a course.",
+        "score": -0.0008
+      },
+      {
+        "track_id": "mc_027",
+        "caption": "A bagpipe ensemble playing a quick melody in unison, employing trills to ornament it.",
+        "score": -0.001
+      },
+      {
+        "track_id": "mc_130",
+        "caption": "The first song starts with a hihat, e-guitar playing a melody and a bassline. Then the song changes after some radio noise sounds into a pop song containing a piano; male backing voices; synth lead sound and a female singer. These songs may be playing for an advertisement.",
+        "score": -0.0014
+      }
+    ]
+  },
+  {
+    "query_id": 2,
+    "query_caption": "The first song starts with a hihat, e-guitar playing a melody and a bassline. Then the song changes after some radio noise sounds into a pop song containing a piano; male backing voices; synth lead sound and a female singer. These songs may be playing for an advertisement.",
+    "top_3_retrieved_clips": [
+      {
+        "track_id": "mc_027",
+        "caption": "A bagpipe ensemble playing a quick melody in unison, employing trills to ornament it.",
+        "score": -0.0142
+      },
+      {
+        "track_id": "mc_130",
+        "caption": "The first song starts with a hihat, e-guitar playing a melody and a bassline. Then the song changes after some radio noise sounds into a pop song containing a piano; male backing voices; synth lead sound and a female singer. These songs may be playing for an advertisement.",
+        "score": -0.0146
+      },
+      {
+        "track_id": "mc_071",
+        "caption": "This is an instrumental sitar music piece. The sitar is being played at a medium-to-high range. There is a calming and relaxing atmosphere to this piece. This piece can be used in the background of a meditation video. It could also be played during a meditation session at a course.",
+        "score": -0.0146
+      }
+    ]
+  },
+  {
+    "query_id": 3,
+    "query_caption": "This is a hip-hop music piece. There is a crisp synth sound playing the melody. The piece has a strong bass sound. There is a melodic pad with beat repeat effect that uses a piano sample. The rhythmic background is provided by a loud electronic drum beat. The piece is energetic and modern sounding. It could be used in the soundtrack of a sci-fi movie where there is a lot of action going on.",
+    "top_3_retrieved_clips": [
+      {
+        "track_id": "mc_130",
+        "caption": "The first song starts with a hihat, e-guitar playing a melody and a bassline. Then the song changes after some radio noise sounds into a pop song containing a piano; male backing voices; synth lead sound and a female singer. These songs may be playing for an advertisement.",
+        "score": 0.021
+      },
+      {
+        "track_id": "mc_071",
+        "caption": "This is an instrumental sitar music piece. The sitar is being played at a medium-to-high range. There is a calming and relaxing atmosphere to this piece. This piece can be used in the background of a meditation video. It could also be played during a meditation session at a course.",
+        "score": 0.021
+      },
+      {
+        "track_id": "mc_027",
+        "caption": "A bagpipe ensemble playing a quick melody in unison, employing trills to ornament it.",
+        "score": 0.0205
+      }
+    ]
+  },
+  {
+    "query_id": 4,
+    "query_caption": "This is a Swiss folk music piece. There is a male vocal and there is a female vocal. They are yodeling as a duet. The melody in the background is being played by a melodeon. There is a pastoral feel to it. This piece could be used in the soundtrack of a movie that takes place in the Alps region.",
+    "top_3_retrieved_clips": [
+      {
+        "track_id": "mc_071",
+        "caption": "This is an instrumental sitar music piece. The sitar is being played at a medium-to-high range. There is a calming and relaxing atmosphere to this piece. This piece can be used in the background of a meditation video. It could also be played during a meditation session at a course.",
+        "score": 0.0104
+      },
+      {
+        "track_id": "mc_130",
+        "caption": "The first song starts with a hihat, e-guitar playing a melody and a bassline. Then the song changes after some radio noise sounds into a pop song containing a piano; male backing voices; synth lead sound and a female singer. These songs may be playing for an advertisement.",
+        "score": 0.0102
+      },
+      {
+        "track_id": "mc_027",
+        "caption": "A bagpipe ensemble playing a quick melody in unison, employing trills to ornament it.",
+        "score": 0.01
+      }
+    ]
+  },
+  {
+    "query_id": 5,
+    "query_caption": "A synth pad is playing a drone sound in the lower mid range. Cymbals are creating atmosphere while a flute/string/brass sound is playing a melody. The whole recording is full of reverb. This song may be playing in a forest documentary.",
+    "top_3_retrieved_clips": [
+      {
+        "track_id": "mc_130",
+        "caption": "The first song starts with a hihat, e-guitar playing a melody and a bassline. Then the song changes after some radio noise sounds into a pop song containing a piano; male backing voices; synth lead sound and a female singer. These songs may be playing for an advertisement.",
+        "score": 0.0165
+      },
+      {
+        "track_id": "mc_071",
+        "caption": "This is an instrumental sitar music piece. The sitar is being played at a medium-to-high range. There is a calming and relaxing atmosphere to this piece. This piece can be used in the background of a meditation video. It could also be played during a meditation session at a course.",
+        "score": 0.016
+      },
+      {
+        "track_id": "mc_024",
+        "caption": "A synth pad is playing a drone sound in the lower mid range. Cymbals are creating atmosphere while a flute/string/brass sound is playing a melody. The whole recording is full of reverb. This song may be playing in a forest documentary.",
+        "score": 0.0156
+      }
+    ]
+  },
+  {
+    "query_id": 6,
+    "query_caption": "someone is playing a high pitched melody on a steel drum. The file is of poor audio-quality.",
+    "top_3_retrieved_clips": [
+      {
+        "track_id": "mc_027",
+        "caption": "A bagpipe ensemble playing a quick melody in unison, employing trills to ornament it.",
+        "score": 0.0102
+      },
+      {
+        "track_id": "mc_071",
+        "caption": "This is an instrumental sitar music piece. The sitar is being played at a medium-to-high range. There is a calming and relaxing atmosphere to this piece. This piece can be used in the background of a meditation video. It could also be played during a meditation session at a course.",
+        "score": 0.0101
+      },
+      {
+        "track_id": "mc_130",
+        "caption": "The first song starts with a hihat, e-guitar playing a melody and a bassline. Then the song changes after some radio noise sounds into a pop song containing a piano; male backing voices; synth lead sound and a female singer. These songs may be playing for an advertisement.",
+        "score": 0.0099
+      }
+    ]
+  },
+  {
+    "query_id": 7,
+    "query_caption": "The Pop song features a soft female vocal singing over sustained pulsating synth lead, mellow piano melody, sustained synth brass, punchy kick, claps. tinny wide hi hats and high pitched female vocal melody. It sounds emotional, sad, passionate and like something you would hear on a radio.",
+    "top_3_retrieved_clips": [
+      {
+        "track_id": "mc_027",
+        "caption": "A bagpipe ensemble playing a quick melody in unison, employing trills to ornament it.",
+        "score": 0.0048
+      },
+      {
+        "track_id": "mc_071",
+        "caption": "This is an instrumental sitar music piece. The sitar is being played at a medium-to-high range. There is a calming and relaxing atmosphere to this piece. This piece can be used in the background of a meditation video. It could also be played during a meditation session at a course.",
+        "score": 0.0046
+      },
+      {
+        "track_id": "mc_130",
+        "caption": "The first song starts with a hihat, e-guitar playing a melody and a bassline. Then the song changes after some radio noise sounds into a pop song containing a piano; male backing voices; synth lead sound and a female singer. These songs may be playing for an advertisement.",
+        "score": 0.0045
+      }
+    ]
+  },
+  {
+    "query_id": 8,
+    "query_caption": "This audio contains a theremin playing a melody in the higher register along to an acoustic piano recording in the background. This song may be practicing theremin playing along with a backing track.",
+    "top_3_retrieved_clips": [
+      {
+        "track_id": "mc_027",
+        "caption": "A bagpipe ensemble playing a quick melody in unison, employing trills to ornament it.",
+        "score": -0.0067
+      },
+      {
+        "track_id": "mc_071",
+        "caption": "This is an instrumental sitar music piece. The sitar is being played at a medium-to-high range. There is a calming and relaxing atmosphere to this piece. This piece can be used in the background of a meditation video. It could also be played during a meditation session at a course.",
+        "score": -0.007
+      },
+      {
+        "track_id": "mc_130",
+        "caption": "The first song starts with a hihat, e-guitar playing a melody and a bassline. Then the song changes after some radio noise sounds into a pop song containing a piano; male backing voices; synth lead sound and a female singer. These songs may be playing for an advertisement.",
+        "score": -0.0076
+      }
+    ]
+  },
+  {
+    "query_id": 9,
+    "query_caption": "The Low Quality recording features r&b/soul songs sung by passionate male vocalists over fat bass guitar, punchy kick and snare hits and arpeggiated electric guitar melody. There are also some chattering voices in the background, it sounds like it is a live performance.",
+    "top_3_retrieved_clips": [
+      {
+        "track_id": "mc_027",
+        "caption": "A bagpipe ensemble playing a quick melody in unison, employing trills to ornament it.",
+        "score": 0.0013
+      },
+      {
+        "track_id": "mc_071",
+        "caption": "This is an instrumental sitar music piece. The sitar is being played at a medium-to-high range. There is a calming and relaxing atmosphere to this piece. This piece can be used in the background of a meditation video. It could also be played during a meditation session at a course.",
+        "score": 0.0007
+      },
+      {
+        "track_id": "mc_130",
+        "caption": "The first song starts with a hihat, e-guitar playing a melody and a bassline. Then the song changes after some radio noise sounds into a pop song containing a piano; male backing voices; synth lead sound and a female singer. These songs may be playing for an advertisement.",
+        "score": -0.0002
+      }
+    ]
+  },
+  {
+    "query_id": 10,
+    "query_caption": "This is a Hindustani classical music piece. There is a harmonium playing the main tune. A bansuri joins in to play, supporting a melody every now and then. The rhythmic background consists of the tabla percussion and the electronic drums. The atmosphere of the piece is joyful.",
+    "top_3_retrieved_clips": [
+      {
+        "track_id": "mc_071",
+        "caption": "This is an instrumental sitar music piece. The sitar is being played at a medium-to-high range. There is a calming and relaxing atmosphere to this piece. This piece can be used in the background of a meditation video. It could also be played during a meditation session at a course.",
+        "score": 0.0089
+      },
+      {
+        "track_id": "mc_027",
+        "caption": "A bagpipe ensemble playing a quick melody in unison, employing trills to ornament it.",
+        "score": 0.0088
+      },
+      {
+        "track_id": "mc_130",
+        "caption": "The first song starts with a hihat, e-guitar playing a melody and a bassline. Then the song changes after some radio noise sounds into a pop song containing a piano; male backing voices; synth lead sound and a female singer. These songs may be playing for an advertisement.",
+        "score": 0.0085
+      }
+    ]
+  }
+]

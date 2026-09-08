@@ -1,0 +1,47 @@
+# Configuration for GNN-Based BERT Music Context Understanding
+# Course: Neural Networks (CSE425 / EEE474 / CSE715)
+
+audio:
+  sample_rate: 22050
+  n_fft: 2048
+  hop_length: 512
+  n_mels: 128
+  n_chroma: 12
+  n_mfcc: 20
+  segment_duration: 3.0  # seconds per segment node
+  similarity_threshold: 0.6  # tau threshold for segment cosine similarity edge
+
+model:
+  bert_model_name: "distilbert-base-uncased"
+  text_max_length: 128
+  text_embed_dim: 768
+  node_feature_dim: 32  # combined chroma + summary audio features
+  gnn_type: "graphsage"  # graphsage, gat
+  gnn_hidden_dim: 128
+  gnn_out_dim: 128
+  gnn_num_layers: 2
+  fusion_type: "cross_attention"  # cross_attention, concat
+  fusion_hidden_dim: 128
+  num_tags: 16
+  contrastive_proj_dim: 128
+  contrastive_temperature: 0.07
+  dropout: 0.2
+
+training:
+  batch_size: 8
+  learning_rate: 0.0003
+  bert_learning_rate: 0.00003
+  weight_decay: 0.0001
+  epochs: 12
+  alpha_emotion: 0.5
+  beta_emotion: 0.5
+  device: "mps"  # auto-detected (mps, cuda, cpu)
+
+paths:
+  raw_data: "data/raw"
+  processed_data: "data/processed"
+  splits_dir: "data/splits"
+  results_dir: "results"
+  plots_dir: "results/plots"
+  retrieval_dir: "results/retrieval_examples"
+  metrics_file: "results/metrics.json"
