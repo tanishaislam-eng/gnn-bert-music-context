@@ -1,14 +1,21 @@
 """
-Compilation Script for Final Research Project Report (PDF)
-Generates publication-quality 8-page academic paper matching NeurIPS/IEEE standards,
-complete with executive abstract, formal mathematical formulations, experimental Table 3,
-embedded high-resolution figures, ablation studies, and qualitative case studies.
+Final report generator for:
+GNN-Based BERT for Understanding Context from Music
+
+Prepared by: Tanisha Islam
+Instructor: Moin Mostakim
+BRAC University
+
+This report uses the actual experiment results stored in results/metrics.json.
 """
 
 import os
-from reportlab.lib.pagesizes import letter
+import json
+
 from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import (
     SimpleDocTemplate,
     Paragraph,
@@ -16,265 +23,729 @@ from reportlab.platypus import (
     Table,
     TableStyle,
     Image,
-    KeepTogether,
     HRFlowable,
+    PageBreak,
 )
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 
 def build_final_report_pdf(pdf_path: str, plots_dir: str):
     os.makedirs(os.path.dirname(pdf_path), exist_ok=True)
+
     doc = SimpleDocTemplate(
         pdf_path,
         pagesize=letter,
-        leftMargin=0.75 * inch,
-        rightMargin=0.75 * inch,
-        topMargin=0.75 * inch,
-        bottomMargin=0.75 * inch,
+        leftMargin=0.72 * inch,
+        rightMargin=0.72 * inch,
+        topMargin=0.65 * inch,
+        bottomMargin=0.65 * inch,
     )
 
     styles = getSampleStyleSheet()
 
-    # Custom styles
     title_style = ParagraphStyle(
-        "DocTitle",
-        parent=styles["Heading1"],
+        "TitleCustom",
+        parent=styles["Title"],
         fontName="Helvetica-Bold",
         fontSize=20,
         leading=24,
-        textColor=colors.HexColor("#1e293b"),
-        alignment=1,  # Center
-        spaceAfter=6,
-    )
-
-    subtitle_style = ParagraphStyle(
-        "DocSubtitle",
-        parent=styles["Normal"],
-        fontName="Helvetica",
-        fontSize=11,
-        leading=14,
-        textColor=colors.HexColor("#475569"),
         alignment=1,
-        spaceAfter=15,
-    )
-
-    h1_style = ParagraphStyle(
-        "SectionH1",
-        parent=styles["Heading2"],
-        fontName="Helvetica-Bold",
-        fontSize=13,
-        leading=17,
-        textColor=colors.HexColor("#0f172a"),
-        spaceBefore=14,
-        spaceAfter=6,
-    )
-
-    h2_style = ParagraphStyle(
-        "SectionH2",
-        parent=styles["Heading3"],
-        fontName="Helvetica-Bold",
-        fontSize=11,
-        leading=14,
-        textColor=colors.HexColor("#1e40af"),
-        spaceBefore=10,
-        spaceAfter=4,
-    )
-
-    body_style = ParagraphStyle(
-        "Body",
-        parent=styles["Normal"],
-        fontName="Helvetica",
-        fontSize=9.5,
-        leading=13.5,
-        textColor=colors.HexColor("#334155"),
-        spaceAfter=8,
-    )
-
-    abstract_style = ParagraphStyle(
-        "Abstract",
-        parent=styles["Normal"],
-        fontName="Helvetica-Oblique",
-        fontSize=9.5,
-        leading=14,
-        textColor=colors.HexColor("#1e293b"),
-        leftIndent=24,
-        rightIndent=24,
         spaceAfter=12,
     )
 
-    code_style = ParagraphStyle(
-        "CodeBlock",
-        parent=styles["Code"],
-        fontName="Courier",
+    subtitle_style = ParagraphStyle(
+        "SubtitleCustom",
+        parent=styles["Normal"],
+        fontName="Helvetica",
+        fontSize=11,
+        leading=16,
+        alignment=1,
+        spaceAfter=8,
+    )
+
+    h1 = ParagraphStyle(
+        "H1Custom",
+        parent=styles["Heading1"],
+        fontName="Helvetica-Bold",
+        fontSize=14,
+        leading=18,
+        spaceBefore=8,
+        spaceAfter=8,
+    )
+
+    h2 = ParagraphStyle(
+        "H2Custom",
+        parent=styles["Heading2"],
+        fontName="Helvetica-Bold",
+        fontSize=11,
+        leading=14,
+        spaceBefore=7,
+        spaceAfter=5,
+    )
+
+    body = ParagraphStyle(
+        "BodyCustom",
+        parent=styles["BodyText"],
+        fontName="Helvetica",
+        fontSize=9.5,
+        leading=14,
+        alignment=4,
+        spaceAfter=8,
+    )
+
+    small = ParagraphStyle(
+        "SmallCustom",
+        parent=styles["BodyText"],
+        fontName="Helvetica",
         fontSize=8.5,
-        leading=11,
-        textColor=colors.HexColor("#0f172a"),
+        leading=12,
+        spaceAfter=5,
     )
 
     story = []
 
-    # Title & Metadata Header
-    story.append(Paragraph("GNN-Based BERT for Understanding Context from Music", title_style))
-    story.append(Paragraph("<b>Course:</b> Neural Networks (CSE425 / EEE474 / CSE715) &nbsp;|&nbsp; <b>Prepared By:</b> Moin Mostakim &nbsp;|&nbsp; <b>Date:</b> October 2026", subtitle_style))
-    story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#cbd5e1"), spaceAfter=12))
+    # ------------------------------------------------------------------
+    # PAGE 1: TITLE + ABSTRACT
+    # ------------------------------------------------------------------
 
-    # Abstract
-    story.append(Paragraph("<b>Abstract</b>", h2_style))
-    abstract_text = (
-        "Music is an inherently multi-layered, multi-modal signal characterized by harmonic progressions, "
-        "rhythmic textures, lyrical semantics, and listener-described affective semantics. Traditional sequence "
-        "models (e.g. 2D-CNNs and RNNs on spectrograms) capture local time-frequency patterns but fail to model "
-        "the relational, non-Euclidean topological structure of music, such as cyclic chord progressions and structural "
-        "segment repetitions. In this work, we present a hybrid <b>BERT + Graph Neural Network (GNN)</b> architecture "
-        "for holistic music context understanding. We extract 128-bin log-mel spectrograms and 12-bin pitch chroma features "
-        "from 22,050 Hz audio, segmenting each track into time windows to build acoustic structure graphs based on temporal "
-        "adjacency and harmonic cosine similarity thresholding (τ > 0.55). We deploy GraphSAGE message passing to generate "
-        "permutation-invariant structural readouts <i>g</i>, alongside DistilBERT contextual lyrical representations <i>H_text</i>. "
-        "A multi-modal cross-attention fusion mechanism fuses these representations for multi-label tagging and continuous emotion "
-        "regression (DEAM valence and arousal). Furthermore, we establish a dual-encoder contrastive framework trained via InfoNCE "
-        "loss for text-to-music retrieval and zero-shot tag classification. Comprehensive experiments demonstrate substantial "
-        "gains over unimodal baselines and provide interpretable cross-modal attention maps."
+    story.append(Spacer(1, 0.4 * inch))
+    story.append(
+        Paragraph(
+            "GNN-Based BERT for Understanding Context from Music",
+            title_style,
+        )
     )
-    story.append(Paragraph(abstract_text, abstract_style))
-    story.append(HRFlowable(width="100%", thickness=0.5, color=colors.HexColor("#e2e8f0"), spaceAfter=14))
 
-    # Section 1: Introduction & Problem Formulation
-    story.append(Paragraph("1. Introduction & Mathematical Formulation", h1_style))
-    intro_text = (
-        "Music understanding requires capturing both sequential auditory dynamics and semantic context. "
-        "Formally, we represent each music track as a multi-modal tuple: <b>T = (X_audio, X_text, G, y)</b>, where:<br/>"
-        "• <b>X_audio ∈ R^(F × T)</b>: Normalized 128-bin log-mel spectrogram and 12-bin chroma features.<br/>"
-        "• <b>X_text</b>: Tokenized lyrics, user tags, or expert natural language captions (MusicCaps).<br/>"
-        "• <b>G = (V, E)</b>: Music structure graph where nodes <i>v_i ∈ V</i> denote time segments/chords, and edges <i>e_ij ∈ E</i> "
-        "encode temporal transitions or acoustic cosine similarity exceeding threshold τ.<br/>"
-        "• <b>y</b>: Multi-label target vector comprising discrete genres/moods and continuous valence/arousal coordinates.<br/>"
-        "The contextual language representations are extracted via <b>H_text = BERT(X_text) ∈ R^(L × d)</b>, while node updates "
-        "follow the GraphSAGE message-passing formulation: <i>h_i^(l+1) = σ(W^(l) · CONCAT(h_i^(l), MEAN_{j ∈ N(i)} h_j^(l)))</i>. "
-        "Graph-level readout <i>g = (1/|V|) ∑ h_i^(L)</i> is fused with text representations via cross-attention: "
-        "<i>z = CONCAT(g, A · H_text)</i>, where <i>A = softmax(g W_Q (H_text W_K)^T / √d)</i>."
+    story.append(
+        Paragraph(
+            "<b>Course:</b> Neural Networks (CSE425 / EEE474 / CSE715)",
+            subtitle_style,
+        )
     )
-    story.append(Paragraph(intro_text, body_style))
 
-    # Section 2: Tasks & Architectural Implementation
-    story.append(Paragraph("2. Four-Task Roadmap & Baselines", h1_style))
-    tasks_text = (
-        "<b>• Task 1 (Easy) - Text-Based BERT Tag Classifier:</b> Maps lyrics/captions to context tags using HuggingFace DistilBERT "
-        "with Binary Cross-Entropy loss per tag: <i>L_BERT = -1/K ∑ [y_k log y_hat_k + (1-y_k) log(1-y_hat_k)]</i>.<br/>"
-        "<b>• Task 2 (Medium) - GNN on Music Structure Graphs:</b> Implements GraphSAGE and GAT on chroma/MFCC segment graphs, "
-        "utilizing mean pooling readout to predict music context tags directly from audio graphs.<br/>"
-        "<b>• Task 3 (Hard) - GNN-BERT Fusion & Multi-Task Loss:</b> Integrates cross-attention fusion between graph readout <i>g</i> "
-        "and token embeddings <i>H_text</i>. Jointly predicts multi-label tags and DEAM valence/arousal emotion values with loss: "
-        "<i>L = L_tags + α ||v - v_hat||^2 + β ||a - a_hat||^2</i>.<br/>"
-        "<b>• Task 4 (Advanced) - Dual-Encoder Contrastive Alignment:</b> Learns a shared metric embedding space using symmetric "
-        "InfoNCE loss: <i>L_NCE = -1/N ∑ log [exp(sim(g_i, t_i)/τ) / ∑ exp(sim(g_i, t_j)/τ)]</i>, facilitating zero-shot retrieval "
-        "and zero-shot tag classification."
+    story.append(
+        Paragraph(
+            "<b>Prepared By:</b> Tanisha Islam",
+            subtitle_style,
+        )
     )
-    story.append(Paragraph(tasks_text, body_style))
 
-    # Section 3: Empirical Results & Table 3 Comparison
-    story.append(Paragraph("3. Empirical Evaluation & Comparison (Table 3)", h1_style))
-    
+    story.append(
+        Paragraph(
+            "<b>Instructor:</b> Moin Mostakim",
+            subtitle_style,
+        )
+    )
+
+    story.append(
+        Paragraph(
+            "BRAC University | 2026",
+            subtitle_style,
+        )
+    )
+
+    story.append(
+        HRFlowable(
+            width="100%",
+            thickness=1,
+            color=colors.HexColor("#BBBBBB"),
+            spaceBefore=8,
+            spaceAfter=15,
+        )
+    )
+
+    story.append(Paragraph("Abstract", h1))
+
+    abstract = """
+    Music contains both acoustic structure and semantic context. This project
+    investigates whether graph neural networks and transformer-based language
+    representations can be combined for music-context understanding. Audio is
+    resampled to 22,050 Hz and represented using 128-bin log-mel features,
+    chroma, and MFCC-derived segment features. Temporal adjacency and acoustic
+    cosine similarity are used to construct music structure graphs. GraphSAGE
+    and GAT-style graph processing are evaluated together with DistilBERT text
+    representations. The project includes BERT-only, CNN, GNN-only, early
+    concatenation, and cross-attention fusion experiments. A separate
+    dual-encoder contrastive model is evaluated on genuine MusicCaps
+    audio-caption pairs using InfoNCE loss and retrieval Recall@K.
+    """
+
+    story.append(Paragraph(abstract, body))
+
+    abstract2 = """
+    Experiments were conducted using 1,000 MagnaTagATune examples divided into
+    800 training, 100 validation, and 100 test clips with a 50-tag vocabulary.
+    MusicCaps contributed 188 clean audio-caption pairs for the contrastive
+    experiment. The strongest tag-ranking result was obtained by the CNN
+    baseline with AUC-PR 0.2337, while fixed-threshold Macro-F1 values remained
+    low because of strong multi-label imbalance and limited training. The
+    contrastive model achieved R@1 = 0.05, R@5 = 0.30, and R@10 = 0.45.
+    These results are reported without claiming state-of-the-art performance.
+    """
+
+    story.append(Paragraph(abstract2, body))
+
+    story.append(Paragraph("<b>Keywords:</b> GNN, BERT, music information retrieval, multimodal learning, GraphSAGE, cross-attention, contrastive learning", small))
+
+    story.append(PageBreak())
+
+    # ------------------------------------------------------------------
+    # PAGE 2: DATASET + PREPROCESSING
+    # ------------------------------------------------------------------
+
+    story.append(Paragraph("1. Dataset and Preprocessing", h1))
+
+    story.append(Paragraph("1.1 MagnaTagATune", h2))
+
+    story.append(
+        Paragraph(
+            """
+            The primary supervised tagging experiments use 1,000 real
+            MagnaTagATune clips. The final subset contains 800 training,
+            100 validation, and 100 test samples. Fifty commonly occurring
+            music tags form the multi-label prediction vocabulary. The
+            official split information is preserved where available in the
+            preprocessing pipeline.
+            """,
+            body,
+        )
+    )
+
+    story.append(Paragraph("1.2 MusicCaps", h2))
+
+    story.append(
+        Paragraph(
+            """
+            The cross-modal task uses 188 genuine MusicCaps audio-caption
+            pairs. These are real paired examples rather than synthetic
+            combinations of unrelated audio and captions. For contrastive
+            training, the implementation uses 150 training, 18 validation,
+            and 20 test examples.
+            """,
+            body,
+        )
+    )
+
+    story.append(Paragraph("1.3 Audio Processing", h2))
+
+    story.append(
+        Paragraph(
+            """
+            Audio is resampled to 22,050 Hz. The preprocessing module extracts
+            normalized 128-bin log-mel spectrograms together with chroma and
+            MFCC information. Audio is divided into fixed-duration segments.
+            Each segment becomes a node in the graph and is represented by a
+            32-dimensional acoustic feature vector.
+            """,
+            body,
+        )
+    )
+
+    story.append(Paragraph("1.4 Graph Construction", h2))
+
+    story.append(
+        Paragraph(
+            """
+            Two edge types are created. First, temporal edges connect adjacent
+            audio segments. Second, similarity edges connect acoustically
+            related segments when cosine similarity exceeds the configured
+            threshold. This provides a graph representation capable of
+            connecting repeated or similar regions even when they are not
+            directly adjacent in time.
+            """,
+            body,
+        )
+    )
+
+    story.append(Paragraph("1.5 Text Processing", h2))
+
+    story.append(
+        Paragraph(
+            """
+            Text is encoded using HuggingFace DistilBERT with a maximum token
+            length of 128. For MagnaTagATune, the text context is derived from
+            available title and artist metadata rather than from the target
+            tags themselves, which avoids direct label leakage. MusicCaps uses
+            its genuine expert-written captions.
+            """,
+            body,
+        )
+    )
+
+    story.append(PageBreak())
+
+    # ------------------------------------------------------------------
+    # PAGE 3: MODELS
+    # ------------------------------------------------------------------
+
+    story.append(Paragraph("2. Model Architectures", h1))
+
+    story.append(Paragraph("2.1 CNN Mel-Spectrogram Baseline", h2))
+    story.append(
+        Paragraph(
+            """
+            A convolutional neural network operates directly on real
+            log-mel spectrograms. It provides an audio-only baseline against
+            which graph-based representations can be compared.
+            """,
+            body,
+        )
+    )
+
+    story.append(Paragraph("2.2 Task 1: BERT-only", h2))
+    story.append(
+        Paragraph(
+            """
+            DistilBERT converts text context into contextual token embeddings.
+            A classification head predicts the 50 music tags using binary
+            cross-entropy loss. The pretrained language backbone is frozen by
+            default to reduce computational cost.
+            """,
+            body,
+        )
+    )
+
+    story.append(Paragraph("2.3 Task 2: GNN-only", h2))
+    story.append(
+        Paragraph(
+            """
+            GraphSAGE is applied to the segment graph. Message passing combines
+            each node with information from neighboring temporal and
+            similarity-connected segments. Global graph pooling produces a
+            fixed-size audio representation for multi-label classification.
+            The codebase also contains GAT support.
+            """,
+            body,
+        )
+    )
+
+    story.append(Paragraph("2.4 Task 3: Multimodal Fusion", h2))
+    story.append(
+        Paragraph(
+            """
+            Two multimodal variants are evaluated. Early concatenation joins
+            pooled graph and text representations directly. The cross-attention
+            model instead lets the graph representation attend to contextual
+            BERT token embeddings before classification. Both variants predict
+            only multi-label music tags in the final implementation.
+            """,
+            body,
+        )
+    )
+
+    story.append(Paragraph("2.5 Task 4: Contrastive Audio-Text Alignment", h2))
+    story.append(
+        Paragraph(
+            """
+            A dual-encoder model maps the audio graph and MusicCaps caption
+            into a shared embedding space. InfoNCE loss encourages matched
+            audio-caption pairs to be closer than mismatched examples. The
+            resulting representation is evaluated using text-to-audio
+            retrieval and zero-shot tag prompts.
+            """,
+            body,
+        )
+    )
+
+    story.append(PageBreak())
+
+    # ------------------------------------------------------------------
+    # PAGE 4: RESULTS
+    # ------------------------------------------------------------------
+
+    story.append(Paragraph("3. Experimental Results", h1))
+
     metrics_file = "results/metrics.json"
-    def fmt_val(v, prec=4):
-        if v is None or v == "-" or v == "—":
-            return "—"
-        try:
-            return f"{float(v):.{prec}f}"
-        except (ValueError, TypeError):
-            return str(v)
 
-    if os.path.exists(metrics_file):
-        import json
-        with open(metrics_file) as f:
-            m = json.load(f)
-        table_data = [
-            ["Model Architecture", "Macro-F1", "AUC-PR", "MAE (Emotion)", "R@5 (Retrieval)"],
-            ["Random Tags (B1)", fmt_val(m.get('Random tags', {}).get('macro_f1')), fmt_val(m.get('Random tags', {}).get('auc_pr')), fmt_val(m.get('Random tags', {}).get('mae_emotion'), 3), fmt_val(m.get('Random tags', {}).get('r5_retrieval'), 3)],
-            ["CNN Mel-Spec (B2)", fmt_val(m.get('CNN mel-spec', {}).get('macro_f1')), fmt_val(m.get('CNN mel-spec', {}).get('auc_pr')), fmt_val(m.get('CNN mel-spec', {}).get('mae_emotion'), 3), fmt_val(m.get('CNN mel-spec', {}).get('r5_retrieval'), 3)],
-            ["Task 1: BERT-only", fmt_val(m.get('Task 1: BERT-only', {}).get('macro_f1')), fmt_val(m.get('Task 1: BERT-only', {}).get('auc_pr')), fmt_val(m.get('Task 1: BERT-only', {}).get('mae_emotion'), 3), fmt_val(m.get('Task 1: BERT-only', {}).get('r5_retrieval'), 3)],
-            ["Task 2: GNN-only (GraphSAGE)", fmt_val(m.get('Task 2: GNN-only', {}).get('macro_f1')), fmt_val(m.get('Task 2: GNN-only', {}).get('auc_pr')), fmt_val(m.get('Task 2: GNN-only', {}).get('mae_emotion'), 3), fmt_val(m.get('Task 2: GNN-only', {}).get('r5_retrieval'), 3)],
-            ["Task 3: Early Concat Ablation", fmt_val(m.get('Task 3: Early Concat', {}).get('macro_f1')), fmt_val(m.get('Task 3: Early Concat', {}).get('auc_pr')), fmt_val(m.get('Task 3: Early Concat', {}).get('mae_emotion'), 3), fmt_val(m.get('Task 3: Early Concat', {}).get('r5_retrieval'), 3)],
-            ["Task 3: GNN-BERT (Cross-Attn)", fmt_val(m.get('Task 3: GNN-BERT (Cross-Attn)', {}).get('macro_f1')), fmt_val(m.get('Task 3: GNN-BERT (Cross-Attn)', {}).get('auc_pr')), fmt_val(m.get('Task 3: GNN-BERT (Cross-Attn)', {}).get('mae_emotion'), 3), fmt_val(m.get('Task 3: GNN-BERT (Cross-Attn)', {}).get('r5_retrieval'), 3)],
-            ["Task 4: Contrastive (Zero-Shot)", fmt_val(m.get('Task 4: Contrastive (Zero-Shot)', {}).get('macro_f1')), fmt_val(m.get('Task 4: Contrastive (Zero-Shot)', {}).get('auc_pr')), fmt_val(m.get('Task 4: Contrastive (Zero-Shot)', {}).get('mae_emotion'), 3), fmt_val(m.get('Task 4: Contrastive (Zero-Shot)', {}).get('r5_retrieval'), 3)],
-        ]
-    else:
-        table_data = [
-            ["Model Architecture", "Macro-F1", "AUC-PR", "MAE (Emotion)", "R@5 (Retrieval)"],
-            ["Random Tags (B1)", "0.1871", "0.1814", "2.450", "0.050"],
-            ["CNN Mel-Spec (B2)", "0.1645", "0.3028", "1.250", "—"],
-            ["Task 1: BERT-only", "0.5273", "0.6937", "—", "—"],
-            ["Task 2: GNN-only (GraphSAGE)", "0.0000", "0.1943", "1.100", "—"],
-            ["Task 3: Early Concat Ablation", "0.1098", "0.3153", "0.685", "—"],
-            ["Task 3: GNN-BERT (Cross-Attn)", "0.0000", "0.2437", "0.998", "—"],
-            ["Task 4: Contrastive (Zero-Shot)", "0.1891", "0.1957", "—", "0.333"],
-        ]
-    t = Table(table_data, colWidths=[2.2 * inch, 1.1 * inch, 1.1 * inch, 1.3 * inch, 1.3 * inch])
-    t.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1e293b")),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-        ("FONTSIZE", (0, 0), (-1, -1), 8.5),
-        ("ALIGN", (1, 0), (-1, -1), "CENTER"),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
-        ("TOPPADDING", (0, 0), (-1, -1), 5),
-        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#f8fafc")]),
-        ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#cbd5e1")),
-    ]))
-    story.append(t)
+    if not os.path.exists(metrics_file):
+        raise FileNotFoundError(
+            "results/metrics.json was not found. "
+            "The report intentionally does not use fabricated fallback values."
+        )
+
+    with open(metrics_file, "r", encoding="utf-8") as f:
+        metrics = json.load(f)
+
+    def val(model, key):
+        x = metrics.get(model, {}).get(key, "-")
+        if x in [None, "-", "—"]:
+            return "-"
+        return f"{float(x):.4f}"
+
+    table_data = [
+        ["Model", "Macro-F1", "AUC-PR"],
+        [
+            "Random Tags",
+            val("Random tags", "macro_f1"),
+            val("Random tags", "auc_pr"),
+        ],
+        [
+            "Majority Tags",
+            val("Majority tags", "macro_f1"),
+            val("Majority tags", "auc_pr"),
+        ],
+        [
+            "CNN Mel-Spec",
+            val("CNN mel-spec", "macro_f1"),
+            val("CNN mel-spec", "auc_pr"),
+        ],
+        [
+            "Task 1: BERT-only",
+            val("Task 1: BERT-only", "macro_f1"),
+            val("Task 1: BERT-only", "auc_pr"),
+        ],
+        [
+            "Task 2: GNN-only",
+            val("Task 2: GNN-only", "macro_f1"),
+            val("Task 2: GNN-only", "auc_pr"),
+        ],
+        [
+            "Task 3: Early Concat",
+            val("Task 3: Early Concat", "macro_f1"),
+            val("Task 3: Early Concat", "auc_pr"),
+        ],
+        [
+            "Task 3: Cross-Attention",
+            val("Task 3: GNN-BERT (Cross-Attn)", "macro_f1"),
+            val("Task 3: GNN-BERT (Cross-Attn)", "auc_pr"),
+        ],
+        [
+            "Task 4: Zero-Shot",
+            val("Task 4: Contrastive (Zero-Shot)", "macro_f1"),
+            val("Task 4: Contrastive (Zero-Shot)", "auc_pr"),
+        ],
+    ]
+
+    table = Table(
+        table_data,
+        colWidths=[3.3 * inch, 1.3 * inch, 1.3 * inch],
+    )
+
+    table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#333333")),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("FONTNAME", (0, 1), (0, -1), "Helvetica"),
+                ("FONTSIZE", (0, 0), (-1, -1), 8.5),
+                ("ALIGN", (1, 0), (-1, -1), "CENTER"),
+                ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+                ("TOPPADDING", (0, 0), (-1, -1), 5),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+            ]
+        )
+    )
+
+    story.append(table)
     story.append(Spacer(1, 12))
 
-    # Section 4: Visual Analysis & Figures
-    story.append(Paragraph("4. Visualizations: F1 Curves, t-SNE & Cross-Attention Heatmaps", h1_style))
-
-    f1_curve_path = os.path.join(plots_dir, "f1_loss_curves.png")
-    tsne_path = os.path.join(plots_dir, "tsne_multimodal.png")
-    att_path = os.path.join(plots_dir, "cross_attention_heatmap.png")
-
-    if os.path.exists(f1_curve_path):
-        story.append(Paragraph("<b>Figure 1:</b> Training & Validation Loss and Macro-F1 / Micro-F1 Convergence Curves.", h2_style))
-        story.append(Image(f1_curve_path, width=6.5 * inch, height=2.5 * inch))
-        story.append(Spacer(1, 8))
-
-    if os.path.exists(tsne_path):
-        story.append(Paragraph("<b>Figure 2:</b> 2D t-SNE Projection of Multimodal Latent Space <i>z</i> Colored by Genre and Mood Clusters.", h2_style))
-        story.append(Image(tsne_path, width=6.5 * inch, height=2.6 * inch))
-        story.append(Spacer(1, 8))
-
-    if os.path.exists(att_path):
-        story.append(Paragraph("<b>Figure 3:</b> Cross-Modal Attention Heatmap: Audio Graph Segment Readout Attending to Caption Tokens.", h2_style))
-        story.append(Image(att_path, width=6.5 * inch, height=2.3 * inch))
-        story.append(Spacer(1, 8))
-
-    # Section 5: Case Studies & Discussion
-    story.append(Paragraph("5. Qualitative Case Studies & Discussion", h1_style))
-    case_studies_text = (
-        "<b>Case Study 1 (Jazz Ballad):</b> The audio segment graph captured a repetitive ii-V-I harmonic progression with dense "
-        "similarity edges between intro and outro segments. The cross-attention mechanism placed 42% attention weight on tokens "
-        "<i>'acoustic piano'</i> and <i>'walking bass'</i>, yielding high-confidence predictions for <i>jazz</i> (p=0.88) and <i>calm</i> (p=0.82).<br/>"
-        "<b>Case Study 2 (Heavy Metal):</b> Distorted guitar harmonics exhibited high spectral flux across segments. The model accurately "
-        "predicted high arousal (7.82/9.0) and identified <i>metal</i>, <i>energetic</i>, and <i>guitar</i> tags.<br/>"
-        "<b>Case Study 3 (Neoclassical Nocturne):</b> Introspective solo piano arpeggios produced low arousal (2.15/9.0) and melancholic valence (2.40/9.0). "
-        "The contrastive retrieval module achieved perfect top-5 recall (R@5 = 1.000) for cross-modal query descriptions."
+    story.append(
+        Paragraph(
+            """
+            The CNN baseline produced the highest AUC-PR value of 0.2337.
+            GraphSAGE obtained AUC-PR 0.1907. BERT-only, early concatenation,
+            and cross-attention produced lower ranking performance in this
+            limited experiment. The low Macro-F1 scores, including zero for
+            several models at the fixed decision threshold, show that the
+            current training setup does not provide strong calibrated
+            multi-label classification.
+            """,
+            body,
+        )
     )
-    story.append(Paragraph(case_studies_text, body_style))
 
-    # Section 6: Deliverables Checklist & Conclusion
-    story.append(Paragraph("6. Summary of Course Deliverables", h1_style))
-    deliv_text = (
-        "All required deliverables specified in the course project brief have been fulfilled:<br/>"
-        "1. <b>GitHub Source Code:</b> Fully structured under <code>gnn-bert-music-context/</code> matching page 8 layout.<br/>"
-        "2. <b>Preprocessed Graph Samples:</b> 32 serialized <code>.pt</code> and 32 <code>.json</code> graphs in <code>data/processed/</code>.<br/>"
-        "3. <b>Evaluation Tables + Plots:</b> Table 3 metrics in <code>results/metrics.json</code> and high-resolution figures in <code>results/plots/</code>.<br/>"
-        "4. <b>Interactive Notebooks:</b> <code>notebooks/eda.ipynb</code> and <code>notebooks/demo_context.ipynb</code> with end-to-end inference.<br/>"
-        "5. <b>Publication Report:</b> LaTeX source (<code>final_report.tex</code>) and compiled publication PDF (<code>final_report.pdf</code>)."
+    story.append(
+        Paragraph(
+            """
+            Importantly, the random baseline achieved Macro-F1 0.0575, which is
+            greater than several trained models at the fixed threshold.
+            Therefore, the results should not be interpreted as evidence that
+            the fusion architecture outperforms all baselines. AUC-PR provides
+            a more informative view of ranking ability under the severe class
+            imbalance present in the 50-tag setting.
+            """,
+            body,
+        )
     )
-    story.append(Paragraph(deliv_text, body_style))
+
+    story.append(Paragraph("3.1 MusicCaps Retrieval", h2))
+
+    contrastive = metrics["Task 4: Contrastive (Zero-Shot)"]
+
+    retrieval_data = [
+        ["Metric", "Result"],
+        ["Recall@1", f"{contrastive.get('r1_retrieval', 0):.4f}"],
+        ["Recall@5", f"{contrastive.get('r5_retrieval', 0):.4f}"],
+        ["Recall@10", f"{contrastive.get('r10_retrieval', 0):.4f}"],
+    ]
+
+    retrieval_table = Table(
+        retrieval_data,
+        colWidths=[2.2 * inch, 1.5 * inch],
+    )
+
+    retrieval_table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#444444")),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("FONTSIZE", (0, 0), (-1, -1), 9),
+                ("ALIGN", (1, 0), (-1, -1), "CENTER"),
+                ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+                ("TOPPADDING", (0, 0), (-1, -1), 5),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+            ]
+        )
+    )
+
+    story.append(retrieval_table)
+
+    story.append(PageBreak())
+
+    # ------------------------------------------------------------------
+    # PAGE 5: FIGURES
+    # ------------------------------------------------------------------
+
+    story.append(Paragraph("4. Visual Analysis", h1))
+
+    plot_items = [
+        (
+            "f1_loss_curves.png",
+            "Figure 1. Training losses and available validation performance trends.",
+            6.4,
+            2.4,
+        ),
+        (
+            "tsne_multimodal.png",
+            "Figure 2. t-SNE visualization of learned multimodal representations.",
+            6.4,
+            2.4,
+        ),
+        (
+            "cross_attention_heatmap.png",
+            "Figure 3. Cross-attention visualization between the audio graph representation and text tokens.",
+            6.4,
+            2.2,
+        ),
+    ]
+
+    found_plot = False
+
+    for filename, caption, width, height in plot_items:
+        path = os.path.join(plots_dir, filename)
+
+        if os.path.exists(path):
+            found_plot = True
+            story.append(Paragraph(caption, h2))
+            story.append(
+                Image(
+                    path,
+                    width=width * inch,
+                    height=height * inch,
+                )
+            )
+            story.append(Spacer(1, 10))
+
+    if not found_plot:
+        story.append(
+            Paragraph(
+                "Plot files were not found in results/plots when the report was generated.",
+                body,
+            )
+        )
+
+    story.append(PageBreak())
+
+    # ------------------------------------------------------------------
+    # PAGE 6: QUALITATIVE ANALYSIS
+    # ------------------------------------------------------------------
+
+    story.append(Paragraph("5. Qualitative Retrieval Case Studies", h1))
+
+    story.append(Paragraph("Case Study 1: Synth / Electronic Query", h2))
+    story.append(
+        Paragraph(
+            """
+            A query describing synthesizer-heavy electronic music retrieved
+            examples with mixed relevance. Some top-ranked clips were
+            mismatches, while another result showed broader electronic and pop
+            production overlap. This case demonstrates that the learned
+            embedding contains useful coarse semantic structure but does not
+            consistently produce exact semantic matches.
+            """,
+            body,
+        )
+    )
+
+    story.append(Paragraph("Case Study 2: Pop Production Query", h2))
+    story.append(
+        Paragraph(
+            """
+            For a pop-oriented production description, the matching caption was
+            retrieved at rank 2. This provides a positive example in which the
+            contrastive representation placed the corresponding audio close to
+            its textual description, although it did not achieve the top rank.
+            """,
+            body,
+        )
+    )
+
+    story.append(Paragraph("Case Study 3: Hindustani Classical Query", h2))
+    story.append(
+        Paragraph(
+            """
+            For a Hindustani classical description, a sitar-based meditation
+            example was retrieved at rank 1. The match shares broad cultural,
+            instrumental, and acoustic characteristics with the query. This
+            example suggests that the model can capture some high-level
+            instrument and style associations even with a small training set.
+            """,
+            body,
+        )
+    )
+
+    story.append(Paragraph("Interpretability", h2))
+    story.append(
+        Paragraph(
+            """
+            The cross-attention visualization provides a qualitative indication
+            of which text tokens interact most strongly with the pooled graph
+            representation. These maps should be interpreted as model
+            attention patterns rather than causal explanations. The project
+            does not contain lyric annotations, so no claim is made about
+            lyric-level alignment.
+            """,
+            body,
+        )
+    )
+
+    story.append(PageBreak())
+
+    # ------------------------------------------------------------------
+    # PAGE 7: LIMITATIONS + CONCLUSION
+    # ------------------------------------------------------------------
+
+    story.append(Paragraph("6. Limitations and Deviations", h1))
+
+    story.append(
+        Paragraph(
+            """
+            <b>Task 2 dataset deviation:</b> The project specification proposes
+            genre classification on GTZAN or FMA-small. Because of the limited
+            project duration and computational constraints, the implemented
+            Task 2 uses the available MagnaTagATune multi-label tagging setup
+            instead. Therefore, the GNN-only experiment should be interpreted
+            as audio-graph tag classification rather than the requested
+            GTZAN/FMA genre experiment.
+            """,
+            body,
+        )
+    )
+
+    story.append(
+        Paragraph(
+            """
+            <b>Task 3 qualitative limitation:</b> The dataset used in the final
+            pipeline contains no lyrics. Consequently, the required
+            graph-path-plus-lyric alignment analysis could not be completed
+            literally. The project instead provides graph/text
+            cross-attention visualization and caption-based qualitative
+            analysis.
+            """,
+            body,
+        )
+    )
+
+    story.append(
+        Paragraph(
+            """
+            <b>Training scale:</b> Models were trained for only four epochs on a
+            reduced subset of MagnaTagATune. The MusicCaps contrastive
+            experiment contains only 188 clean pairs. These choices made the
+            project computationally manageable but strongly limit
+            generalization and model convergence.
+            """,
+            body,
+        )
+    )
+
+    story.append(
+        Paragraph(
+            """
+            <b>Threshold sensitivity and imbalance:</b> The multi-label target
+            distribution is highly imbalanced. A single fixed probability
+            threshold produces very low Macro-F1 for several models even when
+            their AUC-PR indicates some ranking ability. Future work should
+            tune per-class thresholds, use class-balanced losses, train for
+            more epochs, and evaluate larger datasets.
+            """,
+            body,
+        )
+    )
+
+    story.append(Paragraph("7. Conclusion", h1))
+
+    story.append(
+        Paragraph(
+            """
+            This project implements an end-to-end multimodal music-context
+            pipeline combining real audio preprocessing, graph construction,
+            GraphSAGE/GAT components, DistilBERT text representations,
+            multimodal fusion, and contrastive audio-text alignment. Although
+            the experimental results are modest, the implementation
+            demonstrates the full technical workflow required to investigate
+            graph-based and language-based representations of music.
+            """,
+            body,
+        )
+    )
+
+    story.append(
+        Paragraph(
+            """
+            The strongest supervised ranking result was produced by the CNN
+            mel-spectrogram baseline with AUC-PR 0.2337. The MusicCaps
+            contrastive model achieved Recall@1 of 0.05, Recall@5 of 0.30, and
+            Recall@10 of 0.45. These results establish a reproducible baseline
+            for future work rather than a state-of-the-art claim.
+            """,
+            body,
+        )
+    )
+
+    story.append(Paragraph("8. Project Deliverables", h1))
+
+    story.append(
+        Paragraph(
+            """
+            The repository includes the complete source code, configuration,
+            dataset preparation scripts, training and evaluation modules,
+            representative graph JSON files, evaluation metrics, plots,
+            qualitative retrieval examples, an exploratory notebook, and
+            <code>notebooks/demo_context.ipynb</code> containing an end-to-end
+            multimodal forward-pass demonstration.
+            """,
+            body,
+        )
+    )
+
+    story.append(
+        Paragraph(
+            """
+            Repository: github.com/tanishaislam-eng/gnn-bert-music-context
+            """,
+            small,
+        )
+    )
 
     doc.build(story)
+
     print(f"Final report PDF successfully generated at: {pdf_path}")
 
 
 if __name__ == "__main__":
-    pdf_dest = "report/final_report.pdf"
-    p_dir = "results/plots"
-    build_final_report_pdf(pdf_dest, p_dir)
+    build_final_report_pdf(
+        "report/final_report.pdf",
+        "results/plots",
+    )
