@@ -2,49 +2,41 @@
   "Random tags": {
     "macro_f1": 0.0575,
     "auc_pr": 0.0957,
-    "mae_emotion": "-",
     "r5_retrieval": "-"
   },
   "Majority tags": {
     "macro_f1": 0.0,
     "auc_pr": 0.0637,
-    "mae_emotion": "-",
     "r5_retrieval": "-"
   },
   "CNN mel-spec": {
     "macro_f1": 0.0239,
     "auc_pr": 0.2337,
-    "mae_emotion": "-",
     "r5_retrieval": "-"
   },
   "Task 1: BERT-only": {
     "macro_f1": 0.0,
     "auc_pr": 0.1024,
-    "mae_emotion": "-",
     "r5_retrieval": "-"
   },
   "Task 2: GNN-only": {
     "macro_f1": 0.0091,
     "auc_pr": 0.1907,
-    "mae_emotion": "-",
     "r5_retrieval": "-"
   },
   "Task 3: Early Concat": {
     "macro_f1": 0.0,
     "auc_pr": 0.0887,
-    "mae_emotion": "-",
     "r5_retrieval": "-"
   },
   "Task 3: GNN-BERT (Cross-Attn)": {
     "macro_f1": 0.0,
     "auc_pr": 0.0935,
-    "mae_emotion": "-",
     "r5_retrieval": "-"
   },
   "Task 4: Contrastive (Zero-Shot)": {
     "macro_f1": 0.0408,
     "auc_pr": 0.0634,
-    "mae_emotion": "-",
     "r5_retrieval": 0.3,
     "r1_retrieval": 0.05,
     "r10_retrieval": 0.45
