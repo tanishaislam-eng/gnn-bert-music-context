@@ -52,3 +52,4 @@ data/splits/
 # Keep GitHub submission examples
 !data/examples/
 !data/examples/*.json
+report/
